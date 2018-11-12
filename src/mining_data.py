@@ -40,7 +40,7 @@ def get_dataset_sentence_polarity_as_df():
 def make_dataset():
     print("Construct a new dataset")
     dataset = pd.concat(
-        [get_dataset_movie_sentiment_as_df(), get_dataset_polarity_as_df(), get_dataset_sentence_polarity_as_df()],
+        [get_dataset_movie_sentiment_as_df()],
         sort=False,
         ignore_index=True
     )
