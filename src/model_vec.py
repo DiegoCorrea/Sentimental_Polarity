@@ -1,6 +1,8 @@
 import string
 import nltk
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer, TfidfTransformer
+import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 def __lem_tokens(tokens):
@@ -20,31 +22,18 @@ def __lem_normalize(text):
     )
 
 
-def find_similarity(text_list):
-    tfidf_vec = TfidfVectorizer(
-        tokenizer=__lem_normalize,
-        stop_words='english',
-        analyzer='word'
-    )
-    tfidf = tfidf_vec.fit_transform([str(txt) for txt in text_list])
-    return (tfidf * tfidf.T).toarray()
-
-
-def test_similarity(text_list):
+def tf_as_matrix(sentence_list):
     LemVectorizer = CountVectorizer(tokenizer=__lem_normalize, stop_words='english')
-    LemVectorizer.fit_transform(text_list)
-    print(LemVectorizer.vocabulary_)
-    tf_matrix = LemVectorizer.transform(text_list).toarray()
-    print(tf_matrix)
-    tfidfTran = TfidfTransformer(norm="l2")
-    tfidfTran.fit(tf_matrix)
-    print(tfidfTran.idf_)
-    tfidf_matrix = tfidfTran.transform(tf_matrix)
-    for t in tfidf_matrix.toarray():
-        print(t)
-    print("")
-    print("*")
-    print("")
-    cos_similarity_matrix = (tfidf_matrix * tfidf_matrix.T).toarray()
-    for c in cos_similarity_matrix:
-        print(c)
+    LemVectorizer.fit_transform(sentence_list)
+    # print(LemVectorizer.vocabulary_)
+    # print(sorted(LemVectorizer.vocabulary_.items(), key=lambda kv: kv[1])[:50])
+    words_couted = LemVectorizer.vocabulary_.items()
+    tf_matrix = LemVectorizer.transform(sentence_list).toarray()
+    # print(tf_matrix)
+    return tf_matrix, words_couted
+
+
+def model_vectorize(dataset_df):
+    tf_matrix, words_couted = tf_as_matrix(sentence_list=dataset_df['sentence'].tolist())
+    data_df = pd.DataFrame(data=np.matrix(tf_matrix), columns=[a for a, v in words_couted])
+    return data_df, dataset_df['polarity']
