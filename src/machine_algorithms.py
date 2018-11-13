@@ -51,16 +51,20 @@ def main(data_df, polarity_class):
     # Uso dos dados no treinamento e teste do Perceptron RNA, por fim avaliação dos resultados
     clf = train_perceptron(x_train, y_train)
     y_pred = clf.predict(x_test)
+    print('-'*10 + ' Perceptron ' + '-'*10)
     evaluate(y_pred, y_test)
-    # Uso dos dados no treinamento e teste da Arvore de Decisão, por fim avaliação dos resultados
+    # Uso dos dados no treinamento e teste da Árvore de Decisão, por fim avaliação dos resultados
     clf = train_tree(x_train, y_train)
     y_pred = clf.predict(x_test)
+    print('-' * 10 + ' Árvore de Decisão ' + '-' * 10)
     evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste do KNN, por fim avaliação dos resultados
     clf = train_knn(x_train, y_train)
     y_pred = clf.predict(x_test)
+    print('-' * 10 + ' KNN ' + '-' * 10)
     evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste do Naive Bayes, por fim avaliação dos resultados
     clf = train_naive_bayes(x_train, y_train)
     y_pred = clf.predict(x_test)
+    print('-' * 10 + ' Naive Bayes ' + '-' * 10)
     evaluate(y_pred, y_test)
