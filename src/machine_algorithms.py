@@ -5,6 +5,13 @@ from sklearn.linear_model import Perceptron
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+
+
+def train_naive_bayes(x_train, y_train):
+    clf = GaussianNB()
+    clf = clf.fit(x_train, y_train)
+    return clf
 
 
 def train_knn(x_train, y_train):
@@ -51,5 +58,9 @@ def main(data_df, polarity_class):
     evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste do KNN, por fim avaliação dos resultados
     clf = train_knn(x_train, y_train)
+    y_pred = clf.predict(x_test)
+    evaluate(y_pred, y_test)
+    # Uso dos dados no treinamento e teste do Naive Bayes, por fim avaliação dos resultados
+    clf = train_naive_bayes(x_train, y_train)
     y_pred = clf.predict(x_test)
     evaluate(y_pred, y_test)
