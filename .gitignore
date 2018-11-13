@@ -109,5 +109,5 @@ files/
 *.log
 *.csv
 *.cls
-.ideia
+.ideia/*
 datasets/
