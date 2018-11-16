@@ -34,6 +34,6 @@ def tf_as_matrix(sentence_list):
 
 
 def model_vectorize(dataset_df):
-    tf_matrix, words_couted = tf_as_matrix(sentence_list=dataset_df['sentence'].tolist())
+    tf_matrix, words_couted = tf_as_matrix(sentence_list=dataset_df['stem_sentence'].tolist())
     data_df = pd.DataFrame(data=np.matrix(tf_matrix), columns=[a for a, v in words_couted])
     return data_df, dataset_df['polarity']
