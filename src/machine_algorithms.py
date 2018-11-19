@@ -48,22 +48,22 @@ def main(data_df, polarity_class):
     # Divisão dos dados em treinamento e teste
     x_train, x_test, y_train, y_test = split_data(data_df, polarity_class)
     # Uso dos dados no treinamento e teste do Perceptron RNA, por fim avaliação dos resultados
-    print('-' * 10 + ' Perceptron ' + '-' * 10)
+    print("\tPerceptron")
     clf = train_perceptron(x_train, y_train)
     y_pred = clf.predict(x_test)
-    evaluate_results_as_dict['per'] = evaluate(y_pred, y_test)
+    evaluate_results_as_dict['Perceptron'] = evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste da Árvore de Decisão, por fim avaliação dos resultados
-    print('-' * 10 + ' Árvore de Decisão ' + '-' * 10)
+    print("\tÁrvore de Decisão")
     clf = train_tree(x_train, y_train)
     y_pred = clf.predict(x_test)
     evaluate_results_as_dict['AD'] = evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste do KNN, por fim avaliação dos resultados
-    print('-' * 10 + ' KNN ' + '-' * 10)
+    print("\tKNN")
     clf = train_knn(x_train, y_train)
     y_pred = clf.predict(x_test)
     evaluate_results_as_dict['KNN'] = evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste do Naive Bayes, por fim avaliação dos resultados
-    print('-' * 10 + ' Naive Bayes ' + '-' * 10)
+    print("\tNaive Bayes")
     clf = train_naive_bayes(x_train, y_train)
     y_pred = clf.predict(x_test)
     evaluate_results_as_dict['NB'] = evaluate(y_pred, y_test)
