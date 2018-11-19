@@ -42,7 +42,6 @@ def evaluate(y_pred, y_test):
 
 
 def main(data_df, polarity_class, run, model):
-    evaluate_results_as_dict = dict()
     result_df = pd.DataFrame(data=[], columns=['round', 'model', 'algorithm', 'precision', 'mae'])
     # Divisão dos dados em treinamento e teste
     x_train, x_test, y_train, y_test = split_data(data_df, polarity_class)
