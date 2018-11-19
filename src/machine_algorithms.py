@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import metrics
 from sklearn import tree
 from sklearn.linear_model import Perceptron
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import confusion_matrix, precision_score
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -37,34 +37,34 @@ def split_data(data_df, polarity_class):
 
 
 def evaluate(y_pred, y_test):
-    print(confusion_matrix(y_test, y_pred))
-    print(classification_report(y_test, y_pred))
-    # df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
-    print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
-    print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
-    print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+    return dict({
+        'MAE': metrics.mean_absolute_error(y_test, y_pred),
+        'Precision': precision_score(y_test, y_pred)
+    })
 
 
 def main(data_df, polarity_class):
+    evaluate_results_as_dict = dict()
     # Divisão dos dados em treinamento e teste
     x_train, x_test, y_train, y_test = split_data(data_df, polarity_class)
     # Uso dos dados no treinamento e teste do Perceptron RNA, por fim avaliação dos resultados
+    print('-' * 10 + ' Perceptron ' + '-' * 10)
     clf = train_perceptron(x_train, y_train)
     y_pred = clf.predict(x_test)
-    print('-'*10 + ' Perceptron ' + '-'*10)
-    evaluate(y_pred, y_test)
+    evaluate_results_as_dict['per'] = evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste da Árvore de Decisão, por fim avaliação dos resultados
+    print('-' * 10 + ' Árvore de Decisão ' + '-' * 10)
     clf = train_tree(x_train, y_train)
     y_pred = clf.predict(x_test)
-    print('-' * 10 + ' Árvore de Decisão ' + '-' * 10)
-    evaluate(y_pred, y_test)
+    evaluate_results_as_dict['AD'] = evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste do KNN, por fim avaliação dos resultados
+    print('-' * 10 + ' KNN ' + '-' * 10)
     clf = train_knn(x_train, y_train)
     y_pred = clf.predict(x_test)
-    print('-' * 10 + ' KNN ' + '-' * 10)
-    evaluate(y_pred, y_test)
+    evaluate_results_as_dict['KNN'] = evaluate(y_pred, y_test)
     # Uso dos dados no treinamento e teste do Naive Bayes, por fim avaliação dos resultados
+    print('-' * 10 + ' Naive Bayes ' + '-' * 10)
     clf = train_naive_bayes(x_train, y_train)
     y_pred = clf.predict(x_test)
-    print('-' * 10 + ' Naive Bayes ' + '-' * 10)
-    evaluate(y_pred, y_test)
+    evaluate_results_as_dict['NB'] = evaluate(y_pred, y_test)
+    return evaluate_results_as_dict

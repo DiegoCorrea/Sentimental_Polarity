@@ -1,5 +1,9 @@
 backcall==0.1.0
+beautifulsoup4==4.6.3
+bs4==0.0.1
+contractions==0.0.17
 decorator==4.3.0
+inflect==2.1.0
 ipython==7.0.1
 ipython-genutils==0.2.0
 jedi==0.13.1

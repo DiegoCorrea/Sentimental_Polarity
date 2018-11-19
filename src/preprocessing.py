@@ -161,7 +161,7 @@ def preprocessing_apply(split_dataset_df):
     split_dataset_df['stem_sentence'] = ""
     for index, row in split_dataset_df.iterrows():
         sample = strip_html(row['sentence'])
-        sample = remove_between_square_brackets(sample)
+        # sample = remove_between_square_brackets(sample)
         sample = replace_contractions(sample)
         bag_words = nltk.word_tokenize(sample)
         words = normalize(bag_words)
@@ -172,8 +172,6 @@ def preprocessing_apply(split_dataset_df):
 
 
 def main_start(dataset_df):
-    print('Preprocessing')
-    # dataset_df['sentence'].map(preprocessing_apply)
     pool = ThreadPool(3)
     result = pool.map(preprocessing_apply, np.array_split(dataset_df, 3))
     pool.close()
