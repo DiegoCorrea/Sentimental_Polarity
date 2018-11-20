@@ -1,4 +1,5 @@
 import string
+
 import nltk
 import numpy as np
 import pandas as pd
@@ -33,7 +34,7 @@ def tf_as_matrix(sentence_list):
     return tfidf_matrix.toarray(), sorted(word_position , key=lambda k: (k[1], k[0]))
 
 
-def model_vectorize(dataset_df):
-    tfidf_matrix, word_position = tf_as_matrix(sentence_list=dataset_df['stem_sentence'].tolist())
-    data_df = pd.DataFrame(data=np.matrix(tfidf_matrix), columns=[a for a, v in word_position])
-    return data_df, dataset_df['polarity']
+def mold(**original_dataset):
+    tfidf_matrix, word_position = tf_as_matrix(sentence_list=original_dataset['stem_sentence'].tolist())
+    tfidf_pattern = pd.DataFrame(data=np.matrix(tfidf_matrix), columns=[a for a, v in word_position])
+    return tfidf_pattern, original_dataset['polarity']
