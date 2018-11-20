@@ -15,7 +15,7 @@ if __name__ == '__main__':
     DATASET = preprocessing.main_start(DATASET)
     DATASET.info(memory_usage='deep')
     print("\n")
-    results_df = pd.DataFrame(data=[], columns=['round', 'model', 'algorithm', 'precision', 'mae'])
+    results_df = pd.DataFrame(data=[], columns=['round', 'model', 'algorithm', 'metric', 'value'])
     for i in range(5):
         print("3.\tPreparando os modelos")
         data_df, polarity_class = model_vectorize(DATASET)
