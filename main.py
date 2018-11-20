@@ -17,11 +17,11 @@ if __name__ == '__main__':
     DATASET = preprocessing.main_start(DATASET)
     DATASET.info(memory_usage='deep')
     print("\n")
+    print("3.\tPreparando os modelos")
+    tfidf_pattern, polarity_class = tdidf_model.mold(DATASET)
+    print("\n")
     results_df = pd.DataFrame(data=[], columns=['round', 'model', 'algorithm', 'metric', 'value'])
     for i in range(EXECUTION_TIMES):
-        print("3.\tPreparando os modelos")
-        tfidf_pattern, polarity_class = tdidf_model.mold(**DATASET)
-        print("\n")
         print("4.\tAprendizado")
         # Divisão dos dados em treinamento e teste
         x_train, x_test, y_train, y_test = machine_algorithms.split_data(tfidf_pattern, polarity_class)
