@@ -1,11 +1,12 @@
 import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import Perceptron
 from sklearn.metrics import precision_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
-from sys_variables import THREADS_NUMBER, N_NEIGHBORS, TEST_SIZE
+from sklearn.tree import DecisionTreeClassifier
+
+from sys_variables import THREADS_NUMBER, N_NEIGHBORS, TEST_SIZE, MAX_DEPTH, MIN_SAMPLES_LEAF
 
 
 def train_naive_bayes(x_train, y_train):
@@ -21,7 +22,8 @@ def train_knn(x_train, y_train):
 
 
 def train_tree(x_train, y_train):
-    clf = DecisionTreeClassifier(criterion="entropy", random_state=100, max_depth=11, min_samples_leaf=5)
+    clf = DecisionTreeClassifier(criterion="entropy", random_state=100, max_depth=MAX_DEPTH,
+                                 min_samples_leaf=MIN_SAMPLES_LEAF)
     clf = clf.fit(x_train, y_train)
     return clf
 

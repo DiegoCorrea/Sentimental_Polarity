@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 
-graph_style = [':', '-', '--', '--']
-graph_colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red']
-graph_makers = ['o', '^', 's', 'D']
+from sys_variables import GRAPH_STYLE, GRAPH_COLORS, GRAPH_MAKERS
 
 
 def generate(results_df):
@@ -12,8 +10,8 @@ def generate(results_df):
             plt.grid(True)
             plt.xlabel('Rodada')
             plt.ylabel('Valor')
-            for algorithm, style, colors, makers in zip(results_df['algorithm'].unique().tolist(), graph_style,
-                                                        graph_colors, graph_makers):
+            for algorithm, style, colors, makers in zip(results_df['algorithm'].unique().tolist(), GRAPH_STYLE,
+                                                        GRAPH_COLORS, GRAPH_MAKERS):
                 at_df = results_df[
                     (results_df['algorithm'] == algorithm) &
                     (results_df['model'] == model) &
