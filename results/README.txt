@@ -1,0 +1,1 @@
+Pasta responsavel pelos arquivos de saida

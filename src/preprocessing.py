@@ -157,7 +157,7 @@ def stem_and_lemmatize(words):
 
 
 def preprocessing_apply(split_dataset_df):
-    split_dataset_df['lemma_sentence'] = ""
+    # split_dataset_df['lemma_sentence'] = ""
     split_dataset_df['stem_sentence'] = ""
     for index, row in split_dataset_df.iterrows():
         sample = strip_html(row['sentence'])

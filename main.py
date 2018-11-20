@@ -2,6 +2,8 @@ from src.mining_data import make_dataset
 from src.model_vec import model_vectorize
 from src import machine_algorithms
 from src import preprocessing
+from src import graphics
+from sys_variables import EXECUTION_TIMES
 import pandas as pd
 
 
@@ -16,10 +18,10 @@ if __name__ == '__main__':
     DATASET.info(memory_usage='deep')
     print("\n")
     results_df = pd.DataFrame(data=[], columns=['round', 'model', 'algorithm', 'metric', 'value'])
-    for i in range(5):
+    for i in range(EXECUTION_TIMES):
         print("3.\tPreparando os modelos")
         data_df, polarity_class = model_vectorize(DATASET)
         print("\n")
         print("4.\tAprendizado")
-        results_df = pd.concat([results_df, machine_algorithms.main(data_df, polarity_class, i, 'Model_1')], sort=False)
-    print(results_df)
+        results_df = pd.concat([results_df, machine_algorithms.main(data_df, polarity_class, i+1, 'Model_1')], sort=False)
+    graphics.generate(results_df)

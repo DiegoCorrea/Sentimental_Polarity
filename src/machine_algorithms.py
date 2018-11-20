@@ -1,10 +1,11 @@
 import pandas as pd
-from sklearn import tree
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import Perceptron
 from sklearn.metrics import precision_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
+from sys_variables import THREADS_NUMBER, N_NEIGHBORS, TEST_SIZE
 
 
 def train_naive_bayes(x_train, y_train):
@@ -14,25 +15,25 @@ def train_naive_bayes(x_train, y_train):
 
 
 def train_knn(x_train, y_train):
-    neigh = KNeighborsClassifier(n_neighbors=3, n_jobs=3)
+    neigh = KNeighborsClassifier(n_neighbors=N_NEIGHBORS, n_jobs=THREADS_NUMBER)
     neigh.fit(x_train, y_train)
     return neigh
 
 
 def train_tree(x_train, y_train):
-    clf = tree.DecisionTreeClassifier(criterion="entropy", random_state=100, max_depth=3, min_samples_leaf=5)
+    clf = DecisionTreeClassifier(criterion="entropy", random_state=100, max_depth=11, min_samples_leaf=5)
     clf = clf.fit(x_train, y_train)
     return clf
 
 
 def train_perceptron(x_train, y_train):
-    clf = Perceptron(tol=1e-3, random_state=0, n_jobs=3)
+    clf = Perceptron(tol=1e-3, random_state=0, n_jobs=THREADS_NUMBER)
     clf.fit(x_train, y_train)
     return clf
 
 
 def split_data(data_df, polarity_class):
-    return train_test_split(data_df, polarity_class, test_size=0.20)
+    return train_test_split(data_df, polarity_class, test_size=TEST_SIZE)
 
 
 def evaluate(y_pred, y_test):
@@ -75,9 +76,9 @@ def main(data_df, polarity_class, run, model):
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, model, 'KNN', 'precision', precision]],
+                           pd.DataFrame(data=[[run, model, str(N_NEIGHBORS) + 'NN', 'precision', precision]],
                                         columns=['round', 'model', 'algorithm', 'metric', 'value']),
-                           pd.DataFrame(data=[[run, model, 'KNN', 'mae', mae]],
+                           pd.DataFrame(data=[[run, model, str(N_NEIGHBORS) + 'NN', 'mae', mae]],
                                         columns=['round', 'model', 'algorithm', 'metric', 'value'])
                            ],
                           sort=False

@@ -5,9 +5,9 @@ graph_colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red']
 graph_makers = ['o', '^', 's', 'D']
 
 
-def graphics_generate(results_df):
+def generate(results_df):
     for model in results_df['model'].unique().tolist():
-        for metric in results_df['metrics'].unique().tolist():
+        for metric in results_df['metric'].unique().tolist():
             plt.figure()
             plt.grid(True)
             plt.xlabel('Rodada')
@@ -28,10 +28,11 @@ def graphics_generate(results_df):
                     label=algorithm
                 )
             # plt.legend(loc='best')
-            lgd = plt.legend(loc=4, bbox_to_anchor=(0.5, -0.1), ncol=2)
+            lgd = plt.legend(loc=9, bbox_to_anchor=(0.5, -0.1), ncol=2)
             plt.xticks(sorted(results_df['round'].unique().tolist()))
             plt.savefig(
-                model
+                'results/'
+                + model
                 + '_'
                 + metric
                 + '.png',
