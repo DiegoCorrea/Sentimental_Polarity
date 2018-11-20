@@ -23,6 +23,9 @@ if __name__ == '__main__':
         data_df, polarity_class = model_vectorize(DATASET)
         print("\n")
         print("4.\tAprendizado")
-        results_df = pd.concat([results_df, machine_algorithms.main(data_df, polarity_class, i + 1, 'Model_1')],
+        # Divisão dos dados em treinamento e teste
+        x_train, x_test, y_train, y_test = machine_algorithms.split_data(data_df, polarity_class)
+        results_df = pd.concat(
+            [results_df, machine_algorithms.main(x_train, x_test, y_train, y_test, i + 1, 'Model_1')],
                                sort=False)
     graphics.generate(results_df)

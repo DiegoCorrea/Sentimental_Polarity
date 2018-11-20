@@ -17,8 +17,6 @@ def generate(results_df):
             plt.grid(True)
             plt.xlabel('Rodada')
             plt.ylabel('Valor')
-            lgd = plt.legend(loc=9, bbox_to_anchor=(0.5, -0.1), ncol=2)
-            plt.xticks(sorted(results_df['round'].unique().tolist()))
             # Para cada algoritmo usado cria-se uma linha no gráfico com cores e formatos diferentes
             for algorithm, style, colors, makers in zip(results_df['algorithm'].unique().tolist(), GRAPH_STYLE,
                                                         GRAPH_COLORS, GRAPH_MAKERS):
@@ -35,6 +33,9 @@ def generate(results_df):
                     marker=makers,
                     label=algorithm
                 )
+            # Configura legenda
+            lgd = plt.legend(loc=9, bbox_to_anchor=(0.5, -0.1), ncol=2)
+            plt.xticks(sorted(results_df['round'].unique().tolist()))
             # Salva a figura com alta resolução e qualidade
             plt.savefig(
                 'results/'
