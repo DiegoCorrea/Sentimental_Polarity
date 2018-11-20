@@ -6,7 +6,7 @@ N_NEIGHBORS = 13
 MAX_DEPTH = 11
 MIN_SAMPLES_LEAF = 5
 TEST_SIZE = 0.20
-# Graphics Config Variabless
+# Graphics Config Variables
 GRAPH_STYLE = [':', '-', '--', '--']
 GRAPH_COLORS = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red']
 GRAPH_MAKERS = ['o', '^', 's', 'D']
