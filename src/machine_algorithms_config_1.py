@@ -1,12 +1,11 @@
 import pandas as pd
 from sklearn.linear_model import Perceptron
 from sklearn.metrics import precision_score, mean_absolute_error
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
-from sys_variables import THREADS_NUMBER, N_NEIGHBORS, TEST_SIZE, MAX_DEPTH, MIN_SAMPLES_LEAF
+from sys_variables import THREADS_NUMBER, N_NEIGHBORS_CONFIG_1, MAX_DEPTH_CONFIG_1, MIN_SAMPLES_LEAF_CONFIG_1
 
 
 def train_naive_bayes(x_train, y_train):
@@ -16,7 +15,7 @@ def train_naive_bayes(x_train, y_train):
     :param y_train: Classes dos dados de treinamento
     :return: Classificador treinado
     """
-    clf = GaussianNB()
+    clf = MultinomialNB()
     clf = clf.fit(x_train, y_train)
     return clf
 
@@ -29,7 +28,7 @@ def train_knn(x_train, y_train):
     :param y_train: Classes dos dados de treinamento
     :return: Classificador treinado
     """
-    neigh = KNeighborsClassifier(n_neighbors=N_NEIGHBORS, n_jobs=THREADS_NUMBER)
+    neigh = KNeighborsClassifier(n_neighbors=N_NEIGHBORS_CONFIG_1, n_jobs=THREADS_NUMBER)
     neigh.fit(x_train, y_train)
     return neigh
 
@@ -42,8 +41,8 @@ def train_tree(x_train, y_train):
     :param y_train: Classes dos dados de treinamento
     :return: Classificador treinado
     """
-    clf = DecisionTreeClassifier(criterion="entropy", random_state=100, max_depth=MAX_DEPTH,
-                                 min_samples_leaf=MIN_SAMPLES_LEAF)
+    clf = DecisionTreeClassifier(criterion="entropy", random_state=100, max_depth=MAX_DEPTH_CONFIG_1,
+                                 min_samples_leaf=MIN_SAMPLES_LEAF_CONFIG_1)
     clf = clf.fit(x_train, y_train)
     return clf
 
@@ -59,17 +58,6 @@ def train_perceptron(x_train, y_train):
     clf = Perceptron(tol=1e-3, random_state=0, n_jobs=THREADS_NUMBER)
     clf.fit(x_train, y_train)
     return clf
-
-
-def split_data(data_df, polarity_class):
-    """
-    Função particionadora dos dados em treino e teste
-    As constantes estão no arquivo de variaveis de sistema
-    :param data_df: Dados atributo/valor
-    :param polarity_class: Classe dos dados
-    :return: Quatro valores: dados de treino, classe de treino, dados de teste, classe de teste
-    """
-    return train_test_split(data_df, polarity_class, test_size=TEST_SIZE)
 
 
 def evaluate(y_pred, y_test):
@@ -93,56 +81,58 @@ def main(x_train, x_test, y_train, y_test, run, model):
     :param model: Nome do modelo de dados a ser processado
     :return: DataFrame com os resultados de cada algoritmo
     """
-    result_df = pd.DataFrame(data=[], columns=['round', 'model', 'algorithm', 'metric', 'value'])
+    result_df = pd.DataFrame(data=[], columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
     # Uso dos dados no treinamento e teste do Perceptron RNA, por fim avaliação dos resultados
-    print("\tPerceptron")
+    print("\t\tPerceptron")
     clf = train_perceptron(x_train, y_train)
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, model, 'Perceptron', 'precision', precision]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value']),
-                           pd.DataFrame(data=[[run, model, 'Perceptron', 'mae', mae]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value'])
+                           pd.DataFrame(data=[[run, 'config_1', model, 'Perceptron', 'precision', precision]],
+                                        columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
+                           pd.DataFrame(data=[[run, 'config_1', model, 'Perceptron', 'mae', mae]],
+                                        columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
                            ],
                           sort=False
                           )
     # Uso dos dados no treinamento e teste da Árvore de Decisão, por fim avaliação dos resultados
-    print("\tÁrvore de Decisão")
+    print("\t\tÁrvore de Decisão")
     clf = train_tree(x_train, y_train)
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, model, 'AD-' + str(MAX_DEPTH), 'precision', precision]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value']),
-                           pd.DataFrame(data=[[run, model, 'AD-' + str(MAX_DEPTH), 'mae', mae]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value'])
+                           pd.DataFrame(
+                               data=[[run, 'config_1', model, 'AD', 'precision', precision]],
+                               columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
+                           pd.DataFrame(data=[[run, 'config_1', model, 'AD', 'mae', mae]],
+                                        columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
                            ],
                           sort=False
                           )
     # Uso dos dados no treinamento e teste do KNN, por fim avaliação dos resultados
-    print("\tKNN")
+    print("\t\tKNN")
     clf = train_knn(x_train, y_train)
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, model, str(N_NEIGHBORS) + '-NN', 'precision', precision]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value']),
-                           pd.DataFrame(data=[[run, model, str(N_NEIGHBORS) + '-NN', 'mae', mae]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value'])
+                           pd.DataFrame(data=[
+                               [run, 'config_1', model, 'KNN', 'precision', precision]],
+                               columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
+                           pd.DataFrame(data=[[run, 'config_1', model, 'KNN', 'mae', mae]],
+                                        columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
                            ],
                           sort=False
                           )
     # Uso dos dados no treinamento e teste do Naive Bayes, por fim avaliação dos resultados
-    print("\tNaive Bayes")
+    print("\t\tNaive Bayes")
     clf = train_naive_bayes(x_train, y_train)
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, model, 'NB', 'precision', precision]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value']),
-                           pd.DataFrame(data=[[run, model, 'NB', 'mae', mae]],
-                                        columns=['round', 'model', 'algorithm', 'metric', 'value'])
+                           pd.DataFrame(data=[[run, 'config_1', model, 'NB', 'precision', precision]],
+                                        columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
+                           pd.DataFrame(data=[[run, 'config_1', model, 'NB', 'mae', mae]],
+                                        columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
                            ],
                           sort=False
                           )

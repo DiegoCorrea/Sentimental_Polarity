@@ -106,6 +106,7 @@ ENV/
 *.sqlite3-journal
 
 files/
+*.png
 *.log
 *.csv
 *.cls
