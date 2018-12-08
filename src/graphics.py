@@ -18,8 +18,13 @@ def generate(results_df):
                 plt.grid(True)
                 plt.xlabel('Rodada')
                 plt.ylabel('Valor')
+                results_df_by_filter = results_df[
+                    (results_df['config'] == config) &
+                    (results_df['model'] == model) &
+                    (results_df['metric'] == metric)]
                 # Para cada algoritmo usado cria-se uma linha no gráfico com cores e formatos diferentes
-                for algorithm, style, colors, makers in zip(results_df['algorithm'].unique().tolist(), GRAPH_STYLE,
+                for algorithm, style, colors, makers in zip(results_df_by_filter['algorithm'].unique().tolist(),
+                                                            GRAPH_STYLE,
                                                             GRAPH_COLORS, GRAPH_MAKERS):
                     at_df = results_df[
                         (results_df['config'] == config) &

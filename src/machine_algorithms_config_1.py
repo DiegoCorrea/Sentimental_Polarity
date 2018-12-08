@@ -96,13 +96,13 @@ def main(x_train, x_test, y_train, y_test, run, model):
                           sort=False
                           )
     # Uso dos dados no treinamento e teste da Árvore de Decisão, por fim avaliação dos resultados
-    print("\t\tÁrvore de Decisão")
+    print("\t\tÁrvore de Decisão max 11 profundidade min 5 filhos")
     clf = train_tree(x_train, y_train)
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
                            pd.DataFrame(
-                               data=[[run, 'config_1', model, 'AD', 'precision', precision]],
+                               data=[[run, 'config_1', model, 'AD-11P-5F', 'precision', precision]],
                                columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
                            pd.DataFrame(data=[[run, 'config_1', model, 'AD', 'mae', mae]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
@@ -110,28 +110,28 @@ def main(x_train, x_test, y_train, y_test, run, model):
                           sort=False
                           )
     # Uso dos dados no treinamento e teste do KNN, por fim avaliação dos resultados
-    print("\t\tKNN")
+    print("\t\t13-NN")
     clf = train_knn(x_train, y_train)
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
                            pd.DataFrame(data=[
-                               [run, 'config_1', model, 'KNN', 'precision', precision]],
+                               [run, 'config_1', model, '13-NN', 'precision', precision]],
                                columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
-                           pd.DataFrame(data=[[run, 'config_1', model, 'KNN', 'mae', mae]],
+                           pd.DataFrame(data=[[run, 'config_1', model, '13-NN', 'mae', mae]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
                            ],
                           sort=False
                           )
     # Uso dos dados no treinamento e teste do Naive Bayes, por fim avaliação dos resultados
-    print("\t\tNaive Bayes")
+    print("\t\tMultinomial Naive Bayes")
     clf = train_naive_bayes(x_train, y_train)
     y_pred = clf.predict(x_test)
     mae, precision = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, 'config_1', model, 'NB', 'precision', precision]],
+                           pd.DataFrame(data=[[run, 'config_1', model, 'MNB', 'precision', precision]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
-                           pd.DataFrame(data=[[run, 'config_1', model, 'NB', 'mae', mae]],
+                           pd.DataFrame(data=[[run, 'config_1', model, 'MNB', 'mae', mae]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
                            ],
                           sort=False
