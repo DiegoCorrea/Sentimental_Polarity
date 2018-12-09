@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src import graphics
+from src import generate_results
 from src import machine_algorithms_config_1
 from src import machine_algorithms_config_2
 from src import preprocessing
@@ -49,4 +49,5 @@ if __name__ == '__main__':
         results_df = pd.concat(
             [results_df, machine_algorithms_config_2.main(x_train, x_test, y_train, y_test, i + 1, 'TFIDF')],
             sort=False)
-    graphics.generate(results_df)
+    generate_results.graphics(results_df)
+    generate_results.comparate(results_df)
