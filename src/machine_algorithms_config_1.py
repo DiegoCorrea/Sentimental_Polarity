@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.linear_model import Perceptron
-from sklearn.metrics import precision_score, mean_absolute_error
+from sklearn.metrics import accuracy_score, mean_absolute_error
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -62,12 +62,12 @@ def train_perceptron(x_train, y_train):
 
 def evaluate(y_pred, y_test):
     """
-    Função que valida o treinamento com as métricas MAE e Precision
+    Função que valida o treinamento com as métricas MAE e accuracy
     :param y_pred: Entrada predita
     :param y_test: Entrada real
-    :return: Um par: primeiro o valor do MAE, segundo o valor do Precision
+    :return: Um par: primeiro o valor do MAE, segundo o valor do accuracy
     """
-    return mean_absolute_error(y_test, y_pred), precision_score(y_test, y_pred)
+    return mean_absolute_error(y_test, y_pred), accuracy_score(y_test, y_pred)
 
 
 def main(x_train, x_test, y_train, y_test, run, model):
@@ -86,9 +86,9 @@ def main(x_train, x_test, y_train, y_test, run, model):
     print("\t\tPerceptron")
     clf = train_perceptron(x_train, y_train)
     y_pred = clf.predict(x_test)
-    mae, precision = evaluate(y_pred, y_test)
+    mae, accuracy = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, 'config_1', model, 'Perceptron', 'precision', precision]],
+                           pd.DataFrame(data=[[run, 'config_1', model, 'Perceptron', 'accuracy', accuracy]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
                            pd.DataFrame(data=[[run, 'config_1', model, 'Perceptron', 'mae', mae]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
@@ -99,10 +99,10 @@ def main(x_train, x_test, y_train, y_test, run, model):
     print("\t\tÁrvore de Decisão max 11 profundidade min 5 filhos")
     clf = train_tree(x_train, y_train)
     y_pred = clf.predict(x_test)
-    mae, precision = evaluate(y_pred, y_test)
+    mae, accuracy = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
                            pd.DataFrame(
-                               data=[[run, 'config_1', model, 'AD-11P-5F', 'precision', precision]],
+                               data=[[run, 'config_1', model, 'AD-11P-5F', 'accuracy', accuracy]],
                                columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
                            pd.DataFrame(data=[[run, 'config_1', model, 'AD', 'mae', mae]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
@@ -113,10 +113,10 @@ def main(x_train, x_test, y_train, y_test, run, model):
     print("\t\t13-NN")
     clf = train_knn(x_train, y_train)
     y_pred = clf.predict(x_test)
-    mae, precision = evaluate(y_pred, y_test)
+    mae, accuracy = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
                            pd.DataFrame(data=[
-                               [run, 'config_1', model, '13-NN', 'precision', precision]],
+                               [run, 'config_1', model, '13-NN', 'accuracy', accuracy]],
                                columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
                            pd.DataFrame(data=[[run, 'config_1', model, '13-NN', 'mae', mae]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
@@ -127,9 +127,9 @@ def main(x_train, x_test, y_train, y_test, run, model):
     print("\t\tMultinomial Naive Bayes")
     clf = train_naive_bayes(x_train, y_train)
     y_pred = clf.predict(x_test)
-    mae, precision = evaluate(y_pred, y_test)
+    mae, accuracy = evaluate(y_pred, y_test)
     result_df = pd.concat([result_df,
-                           pd.DataFrame(data=[[run, 'config_1', model, 'MNB', 'precision', precision]],
+                           pd.DataFrame(data=[[run, 'config_1', model, 'MNB', 'accuracy', accuracy]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value']),
                            pd.DataFrame(data=[[run, 'config_1', model, 'MNB', 'mae', mae]],
                                         columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
