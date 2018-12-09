@@ -55,7 +55,7 @@ def train_perceptron(x_train, y_train):
     :param y_train: Classes dos dados de treinamento
     :return: Classificador treinado
     """
-    clf = Perceptron(tol=1e-3, random_state=0, n_jobs=THREADS_NUMBER)
+    clf = Perceptron(tol=1e-4, alpha=0.33, random_state=0, n_jobs=THREADS_NUMBER)
     clf.fit(x_train, y_train)
     return clf
 
