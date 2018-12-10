@@ -1,5 +1,4 @@
 import math
-from copy import deepcopy
 
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -25,12 +24,11 @@ def tf_as_matrix(sentence_list):
 
 def pmi(tf_matrix_df):
     words_count = dict()
-    negative_filter_df = deepcopy(tf_matrix_df[tf_matrix_df['__POLARITY__'] == 0])
-    positive_filter_df = deepcopy(tf_matrix_df[tf_matrix_df['__POLARITY__'] == 1])
+    negative_filter_df = tf_matrix_df[tf_matrix_df['__POLARITY__'] == 0]
+    positive_filter_df = tf_matrix_df[tf_matrix_df['__POLARITY__'] == 1]
     negative_filter_df.drop(['__POLARITY__'], axis=1, inplace=True)
     positive_filter_df.drop(['__POLARITY__'], axis=1, inplace=True)
-    tf_df = tf_matrix_df
-    tf_df.drop(['__POLARITY__'], axis=1, inplace=True)
+    tf_df = tf_matrix_df.drop(['__POLARITY__'], axis=1)
     piw = pd.value_counts(tf_matrix_df['__POLARITY__'].values, sort=False)
     piw = piw / (piw[0] + piw[1])
     total_words = sum([tf_df[col].sum() for col in tf_df.columns])
@@ -51,8 +49,6 @@ def pmi(tf_matrix_df):
             result['positive'] = 0.00001
         negative_filter_df[column] = math.log2(result['negative'])
         positive_filter_df[column] = math.log2(result['positive'])
-        print("negative: ", str(math.log(result['negative'], 2)))
-        print("positive: ", str(math.log(result['positive'], 2)))
     return pd.concat([positive_filter_df, negative_filter_df], sort=False)
 
 
