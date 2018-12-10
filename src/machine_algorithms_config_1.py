@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.linear_model import Perceptron
 from sklearn.metrics import accuracy_score, mean_absolute_error
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
@@ -15,7 +15,7 @@ def train_naive_bayes(x_train, y_train):
     :param y_train: Classes dos dados de treinamento
     :return: Classificador treinado
     """
-    clf = MultinomialNB()
+    clf = GaussianNB(var_smoothing=1e-1)
     clf = clf.fit(x_train, y_train)
     return clf
 
@@ -55,7 +55,7 @@ def train_perceptron(x_train, y_train):
     :param y_train: Classes dos dados de treinamento
     :return: Classificador treinado
     """
-    clf = Perceptron(tol=1e-4, alpha=0.33, random_state=0, n_jobs=THREADS_NUMBER)
+    clf = Perceptron(tol=1e-9, alpha=0.33, random_state=0, n_jobs=THREADS_NUMBER)
     clf.fit(x_train, y_train)
     return clf
 
