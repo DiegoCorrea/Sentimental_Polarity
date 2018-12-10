@@ -31,4 +31,4 @@ def mold(original_dataset):
     """
     tfidf_matrix, word_position = tf_as_matrix(sentence_list=original_dataset['stem_sentence'].tolist())
     tfidf_pattern = pd.DataFrame(data=np.matrix(tfidf_matrix), columns=[a for a, v in word_position])
-    return tfidf_pattern, original_dataset['polarity']
+    return tfidf_pattern
