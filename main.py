@@ -84,5 +84,6 @@ if __name__ == '__main__':
              machine_algorithms_config_2.main(pmi_x_train, pmi_x_test, y_train, y_test, i + 1,
                                               'PMI')],
             sort=False)
+        exit()
     generate_results.graphics(results_df)
     generate_results.comparate(results_df)
