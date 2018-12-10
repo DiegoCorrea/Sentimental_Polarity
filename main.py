@@ -7,6 +7,7 @@ from src import machine_algorithms_config_2
 from src import pmi_model_parallel
 from src import preprocessing
 from src import tdidf_model
+from src import tf_pmi_model
 from src.mining_data import make_dataset
 from sys_variables import EXECUTION_TIMES
 from sys_variables import TEST_SIZE
@@ -51,6 +52,9 @@ if __name__ == '__main__':
     print("\t\tPMI")
     pmi_model = pmi_model_parallel.mold(DATASET)
     print("\n")
+    print("\t\tTF-PMI")
+    tf_pmi_model = tf_pmi_model.mold(DATASET)
+    print("\n")
     results_df = pd.DataFrame(data=[], columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
     print("4.\tAprendizado")
     for i in range(EXECUTION_TIMES):
@@ -59,9 +63,12 @@ if __name__ == '__main__':
         x_train, x_test, y_train, y_test = split_by_index(tfidf_pattern.index.tolist(), DATASET['polarity'])
         tfidf_x_train, tfidf_x_test = split_tfidf(tfidf_pattern, x_train, x_test)
         pmi_x_train, pmi_x_test = split_pmi(pmi_model, x_train, x_test)
-        print(pmi_x_train)
+        tf_pmi_x_train, tf_pmi_x_test = split_pmi(tf_pmi_model, x_train, x_test)
         print('=' * 90)
-        print(pmi_x_test)
+        print(pmi_x_train.head())
+        print('=' * 90)
+        print(tfidf_x_train.head())
+        print('=' * 90)
         print("\tCONFIG 1 - TFIDF")
         results_df = pd.concat(
             [results_df,
@@ -74,6 +81,12 @@ if __name__ == '__main__':
              machine_algorithms_config_1.main(pmi_x_train, pmi_x_test, y_train, y_test, i + 1,
                                               'PMI')],
             sort=False)
+        print("\tCONFIG 1 - TF_PMI")
+        results_df = pd.concat(
+            [results_df,
+             machine_algorithms_config_1.main(tf_pmi_x_train, tf_pmi_x_test, y_train, y_test, i + 1,
+                                              'TF_PMI')],
+            sort=False)
         print("\tCONFIG 2 - TFIDF")
         results_df = pd.concat(
             [results_df,
@@ -85,6 +98,12 @@ if __name__ == '__main__':
             [results_df,
              machine_algorithms_config_2.main(pmi_x_train, pmi_x_test, y_train, y_test, i + 1,
                                               'PMI')],
+            sort=False)
+        print("\tCONFIG 2 - TF_PMI")
+        results_df = pd.concat(
+            [results_df,
+             machine_algorithms_config_2.main(tf_pmi_x_train, tf_pmi_x_test, y_train, y_test, i + 1,
+                                              'TF_PMI')],
             sort=False)
     generate_results.graphics(results_df)
     generate_results.comparate(results_df)
