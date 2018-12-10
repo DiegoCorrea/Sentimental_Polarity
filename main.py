@@ -31,8 +31,8 @@ def split_tfidf(tfidf_pattern, x_train, x_test):
     return tfidf_pattern.ix[x_train], tfidf_pattern.ix[x_test]
 
 
-def split_pmi(pmi_pattern, x_train, x_test):
-    return pmi_pattern.ix[x_train], pmi_pattern.ix[x_test]
+def split_pmi(pmi_model, x_train, x_test):
+    return pmi_model.ix[x_train], pmi_model.ix[x_test]
 
 
 if __name__ == '__main__':
@@ -60,6 +60,8 @@ if __name__ == '__main__':
         tfidf_x_train, tfidf_x_test = split_tfidf(tfidf_pattern, x_train, x_test)
         pmi_x_train, pmi_x_test = split_pmi(pmi_model, x_train, x_test)
         print(pmi_x_train)
+        print('=' * 90)
+        print(pmi_x_test)
         print("\tCONFIG 1 - TFIDF")
         results_df = pd.concat(
             [results_df,
@@ -84,6 +86,5 @@ if __name__ == '__main__':
              machine_algorithms_config_2.main(pmi_x_train, pmi_x_test, y_train, y_test, i + 1,
                                               'PMI')],
             sort=False)
-        exit()
     generate_results.graphics(results_df)
     generate_results.comparate(results_df)
