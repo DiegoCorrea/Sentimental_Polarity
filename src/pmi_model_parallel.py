@@ -1,4 +1,6 @@
 import math
+from copy import deepcopy
+from multiprocessing.dummy import Pool as ThreadPool
 
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -22,33 +24,61 @@ def tf_as_matrix(sentence_list):
     return tf_matrix_df
 
 
+def __calc_pmi(column):
+    global words_count
+    global negative_filter_df
+    global positive_filter_df
+    global total_words
+    global piw
+    words_count[column] = dict()
+    words_count[column]['negative'] = negative_filter_df[column].sum()
+    words_count[column]['positive'] = positive_filter_df[column].sum()
+    total_w = words_count[column]['positive'] + words_count[column]['negative']
+    words_count[column]['negative'] = words_count[column]['negative'] / total_words
+    words_count[column]['positive'] = words_count[column]['positive'] / total_words
+    words_count[column]['total'] = total_w / total_words
+    result = dict()
+    result['positive'] = words_count[column]['positive'] / (words_count[column]['total'] * piw[1])
+    result['negative'] = words_count[column]['negative'] / (words_count[column]['total'] * piw[1])
+    if result['negative'] == 0.0:
+        result['negative'] = 0.00001
+    if result['positive'] == 0.0:
+        result['positive'] = 0.00001
+    negative_filter_df[column] = math.log2(result['negative'])
+    positive_filter_df[column] = math.log2(result['positive'])
+    return {column: {
+        'positive': math.log2(result['positive']),
+        'negative': math.log2(result['negative'])
+    }
+    }
+
+
+words_count = dict()
+negative_filter_df = None
+positive_filter_df = None
+total_words = 0
+piw = []
+
+
 def pmi(tf_matrix_df):
-    words_count = dict()
-    negative_filter_df = tf_matrix_df[tf_matrix_df['__POLARITY__'] == 0]
-    positive_filter_df = tf_matrix_df[tf_matrix_df['__POLARITY__'] == 1]
+    global words_count
+    global negative_filter_df
+    global positive_filter_df
+    global total_words
+    global piw
+    negative_filter_df = deepcopy(tf_matrix_df[tf_matrix_df['__POLARITY__'] == 0])
+    positive_filter_df = deepcopy(tf_matrix_df[tf_matrix_df['__POLARITY__'] == 1])
     negative_filter_df.drop(['__POLARITY__'], axis=1, inplace=True)
     positive_filter_df.drop(['__POLARITY__'], axis=1, inplace=True)
-    tf_df = tf_matrix_df.drop(['__POLARITY__'], axis=1)
+    tf_df = deepcopy(tf_matrix_df.drop(['__POLARITY__'], axis=1))
     piw = pd.value_counts(tf_matrix_df['__POLARITY__'].values, sort=False)
     piw = piw / (piw[0] + piw[1])
     total_words = sum([tf_df[col].sum() for col in tf_df.columns])
-    for column in tf_df.columns:
-        words_count[column] = dict()
-        words_count[column]['negative'] = negative_filter_df[column].sum()
-        words_count[column]['positive'] = positive_filter_df[column].sum()
-        total_w = words_count[column]['positive'] + words_count[column]['negative']
-        words_count[column]['negative'] = words_count[column]['negative'] / total_words
-        words_count[column]['positive'] = words_count[column]['positive'] / total_words
-        words_count[column]['total'] = total_w / total_words
-        result = dict()
-        result['positive'] = words_count[column]['positive'] / (words_count[column]['total'] * piw[1])
-        result['negative'] = words_count[column]['negative'] / (words_count[column]['total'] * piw[1])
-        if result['negative'] == 0.0:
-            result['negative'] = 0.00001
-        if result['positive'] == 0.0:
-            result['positive'] = 0.00001
-        negative_filter_df[column] = math.log2(result['negative'])
-        positive_filter_df[column] = math.log2(result['positive'])
+    pool = ThreadPool(3)
+    users_recommendations_df_list = pool.map(__calc_pmi, tf_df.columns)
+    pool.close()
+    pool.join()
+    print(users_recommendations_df_list)
     return pd.concat([positive_filter_df, negative_filter_df], sort=False)
 
 
