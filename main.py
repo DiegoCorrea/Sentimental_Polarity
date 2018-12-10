@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from src import generate_results
 from src import machine_algorithms_config_1
 from src import machine_algorithms_config_2
+from src import pmi_model
 from src import preprocessing
 from src import tdidf_model
 from src.mining_data import make_dataset
@@ -33,14 +34,17 @@ if __name__ == '__main__':
     DATASET.info(memory_usage='deep')
     print("\n")
     print("3.\tPreparando os modelos")
-    tfidf_pattern, polarity_class = tdidf_model.mold(DATASET)
+    tfidf_pattern = tdidf_model.mold(DATASET)
+    pmi_model = pmi_model.mold(DATASET)
+    print(pmi_model)
+    exit()
     print("\n")
     results_df = pd.DataFrame(data=[], columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
     print("4.\tAprendizado")
     for i in range(EXECUTION_TIMES):
         print("- Rodada " + str(i + 1))
         # Divisão dos dados em treinamento e teste
-        x_train, x_test, y_train, y_test = split_data(tfidf_pattern, polarity_class)
+        x_train, x_test, y_train, y_test = split_data(tfidf_pattern, DATASET['polarity'])
         print("\tCONFIG 1")
         results_df = pd.concat(
             [results_df, machine_algorithms_config_1.main(x_train, x_test, y_train, y_test, i + 1, 'TFIDF')],
