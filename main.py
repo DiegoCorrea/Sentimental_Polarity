@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from src import generate_results
 from src import machine_algorithms_config_1
 from src import machine_algorithms_config_2
-from src import pmi_model
+from src import pmi_model_parallel
 from src import preprocessing
 from src import tdidf_model
 from src.mining_data import make_dataset
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     print("\t\tTF-IDF")
     tfidf_pattern = tdidf_model.mold(DATASET)
     print("\t\tPMI")
-    pmi_model = pmi_model.mold(DATASET)
+    pmi_model = pmi_model_parallel.mold(DATASET)
     print("\n")
     results_df = pd.DataFrame(data=[], columns=['round', 'config', 'model', 'algorithm', 'metric', 'value'])
     print("4.\tAprendizado")

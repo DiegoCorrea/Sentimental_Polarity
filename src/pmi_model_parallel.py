@@ -44,13 +44,10 @@ def __calc_pmi(column):
         result['negative'] = 0.00001
     if result['positive'] == 0.0:
         result['positive'] = 0.00001
-    negative_filter_df[column] = math.log2(result['negative'])
-    positive_filter_df[column] = math.log2(result['positive'])
-    return {column: {
-        'positive': math.log2(result['positive']),
-        'negative': math.log2(result['negative'])
-    }
-    }
+    return (column,
+            math.log2(result['positive']),
+            math.log2(result['negative'])
+            )
 
 
 words_count = dict()
@@ -75,10 +72,12 @@ def pmi(tf_matrix_df):
     piw = piw / (piw[0] + piw[1])
     total_words = sum([tf_df[col].sum() for col in tf_df.columns])
     pool = ThreadPool(3)
-    users_recommendations_df_list = pool.map(__calc_pmi, tf_df.columns)
+    map_results = pool.map(__calc_pmi, tf_df.columns)
     pool.close()
     pool.join()
-    print(users_recommendations_df_list)
+    for column, positive, negative in map_results:
+        negative_filter_df[column] = negative
+        positive_filter_df[column] = positive
     return pd.concat([positive_filter_df, negative_filter_df], sort=False)
 
 
